@@ -33,13 +33,14 @@ jobs:
           cd frontend/
           echo "${{ secrets.FRONTEND_ENV }}" > .env.prod
           pnpm install --no-frozen-lockfile
+          pnpm run build:pages
           export frontend_branch="${{ secrets.FRONTEND_BRANCH }}"
           if [ -n "$frontend_branch" ]; then
             echo "Deploying branch $frontend_branch"
-            cd frontend && wrangler pages deploy ./dist --project-name=$FRONTEND_NAME --branch $frontend_branch
+            wrangler pages deploy ./dist --project-name=$FRONTEND_NAME --branch production
           else
             echo "Deploying branch production"
-            cd frontend && wrangler pages deploy ./dist --project-name=$FRONTEND_NAME --branch production
+            wrangler pages deploy ./dist --project-name=$FRONTEND_NAME --branch production
           fi
           echo "Deployed for tag ${{ github.ref_name }}"
         env:
